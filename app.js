@@ -24,6 +24,8 @@ function normalizePort(val) {
   return false;
 }
 
+app.set('view engine', 'hbs');
+
 var index = require('./routes/index');
 app.use('/', index);
 
