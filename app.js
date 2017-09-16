@@ -52,6 +52,14 @@ app.use(function(err, req, res, next) {
 
 io.on('connection', function(socket){
   console.log('a user connected');
+  socket.on('disconnect', function () {
+    console.log('a user disconnected');
+  });
+  socket.on('move', function (moveData) {
+    console.log('Move sent: ' + JSON.stringify(moveData));
+  });
 });
 
 module.exports = app;
+
+// vim: sw=2 sts=2
