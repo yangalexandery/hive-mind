@@ -8,14 +8,14 @@ var server = http.createServer(app);
 var io = require('socket.io')(server);
 var connect = require('connect');
 var session = require('express-session');
-var cookieParser = require('cookie-parser')
-var cookie = require('cookie')
+var cookieParser = require('cookie-parser');
+var cookie = require('cookie');
 
 var MemoryStore = session.MemoryStore;
 var sessionStore = new MemoryStore();
 
 app.use(cookieParser());
-app.use(session({ store: sessionStore }));
+app.use(session({ store: sessionStore, secret: 'JAAAAASH' }));
 
 server.listen(normalizePort(process.env.PORT || '3000'));
 
