@@ -1,8 +1,10 @@
 var express = require('express')
+var path = require('path')
 var app = express()
 
 var http = require('http');
 var server = http.createServer(app);
+var io = require('socket.io')(server)
 
 server.listen(normalizePort(process.env.PORT || '3000'));
 
@@ -22,7 +24,10 @@ function normalizePort(val) {
   return false;
 }
 
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 var index = require('./routes/index');
 app.use('/', index);
@@ -41,6 +46,10 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+io.on('connection', function(socket){
+  console.log('a user connected');
 });
 
 module.exports = app;
