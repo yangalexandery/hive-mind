@@ -6,4 +6,9 @@ router.get('/', function(req, res) {
   	res.sendFile(path.resolve('public/html/index.html'));
 })
 
+router.get('/game', function(req, res) {
+	res.send();
+	// req.params.gameid
+})
+
 module.exports = router;
