@@ -12,7 +12,7 @@ router.get('/home', function(req, res, next) {
 })
 
 router.get('/game', function(req, res) {
-	res.send();
+	res.render('game', {});
 	// req.params.gameid
 })
 
