@@ -15,7 +15,7 @@ var MemoryStore = session.MemoryStore;
 var sessionStore = new MemoryStore();
 
 app.use(cookieParser());
-app.use(session({ store: sessionStore }));
+app.use(session({ store: sessionStore, secret: 'JAAAAASH' }));
 
 server.listen(normalizePort(process.env.PORT || '3000'));
 
