@@ -1,0 +1,17 @@
+h1{
+    font-size: 60px;
+  }
+
+  .jumbotron{
+    margin-top: 0px;
+  }
+
+  .btn{
+  	position: relative;
+  	overflow: hidden;
+  	height:100px;
+  	width:25%;
+  	margin:4%;
+  	background-color:#eee;
+  	font-size:25px;
+  }
