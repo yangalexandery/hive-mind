@@ -8,8 +8,8 @@ var server = http.createServer(app);
 var io = require('socket.io')(server);
 var connect = require('connect');
 var session = require('express-session');
-var cookieParser = require('cookie-parser')
-var cookie = require('cookie')
+var cookieParser = require('cookie-parser');
+var cookie = require('cookie');
 
 var MemoryStore = session.MemoryStore;
 var sessionStore = new MemoryStore();
