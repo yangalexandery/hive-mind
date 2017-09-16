@@ -21,18 +21,22 @@ body {
 
 .content {
     position: relative;
-    margin: 5%;
-    width: 90%;
+    margin: 20px;
+    margin-top: 2%;
+    /*width: 90%;*/
     height: 90%;
     overflow: hidden;
 }
 
+.sub-content {
+    height: 100%;
+}
+
 .left-content {
-    height: 50px;
-    background-color: red;
+    height: 100%;
 }
 
 .right-content {
-    height: 50px;
+    height: 100%;
     background-color: blue;
 }
