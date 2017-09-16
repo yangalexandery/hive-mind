@@ -1,6 +1,4 @@
 var express = require('express');
-// var chessboard = require('chessboard')
-// var chess.js = require('chess.js')
 var router = express.Router();
 
 router.get('/', function(req, res) {

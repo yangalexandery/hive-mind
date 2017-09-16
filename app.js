@@ -1,7 +1,6 @@
 var express = require('express')
 var path = require('path')
-// var chessboard = require('chessboard')
-// var chess = require('chess.js')
+
 var app = express()
 
 var http = require('http');
