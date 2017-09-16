@@ -3,6 +3,7 @@ var app = express()
 
 var http = require('http');
 var server = http.createServer(app);
+var io = require('socket.io')(server)
 
 server.listen(normalizePort(process.env.PORT || '3000'));
 
@@ -41,6 +42,10 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+io.on('connection', function(socket){
+  console.log('a user connected');
 });
 
 module.exports = app;
