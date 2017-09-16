@@ -1,7 +1,7 @@
 var express = require('express')
 var path = require('path')
-var chessboard = require('chessboard')
-var chess = require('chess.js')
+// var chessboard = require('chessboard')
+// var chess = require('chess.js')
 var app = express()
 
 var http = require('http');
@@ -29,6 +29,7 @@ function normalizePort(val) {
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
+app.use('/scripts', express.static(__dirname + '/node_modules/'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 var index = require('./routes/index');
