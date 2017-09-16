@@ -1,11 +1,21 @@
-var express = require('express')
-var path = require('path')
+var express = require('express');
+var path = require('path');
 
-var app = express()
+var app = express();
 
 var http = require('http');
 var server = http.createServer(app);
-var io = require('socket.io')(server)
+var io = require('socket.io')(server);
+var connect = require('connect');
+var session = require('express-session');
+var cookieParser = require('cookie-parser')
+var cookie = require('cookie')
+
+var MemoryStore = session.MemoryStore;
+var sessionStore = new MemoryStore();
+
+app.use(cookieParser());
+app.use(session({ store: sessionStore }));
 
 server.listen(normalizePort(process.env.PORT || '3000'));
 
@@ -50,7 +60,25 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+io.set('authorization', function(data, accept) {
+  if (data.headers.cookie) {
+    data.cookie = cookie.parse(data.headers.cookie);
+    data.sessionID = data.cookie['express.sid'];
+    sessionStore.get(data.sessionID, function (err, session) {
+      if (err || !session) {
+        accept('Error retrieving session', false);
+      } else {
+        data.session = session;
+        accept(null, true);
+      }
+    });
+  } else {
+    return accept('No cookie transmitted', false);
+  }
+});
+
 io.on('connection', function(socket){
+  // access session data
   console.log('a user connected');
   socket.on('disconnect', function () {
     console.log('a user disconnected');
