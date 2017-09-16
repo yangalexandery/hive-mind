@@ -2,12 +2,12 @@
     "name": "hive-mind",
     "version": "0.0.1",
     "private": true,
+    "scripts": {
+      "start": "node app.js"
+    },
     "license": "MIT",
     "engines": {
         "node": ">=6.9.1"
-    },
-    "scripts": {
-        "start": "node index.js"
     },
     "dependencies": {
         "express": "^4.15.4"
