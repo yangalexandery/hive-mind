@@ -12,6 +12,7 @@
   "dependencies": {
     "chessboard": "^0.1.3",
     "express": "^4.15.4",
-    "hbs": "^4.0.1"
+    "hbs": "^4.0.1",
+    "uikit": "^3.0.0-beta.30"
   }
 }
