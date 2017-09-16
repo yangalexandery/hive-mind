@@ -7,7 +7,7 @@ router.get('/', function(req, res) {
 })
 
 router.get('/game', function(req, res) {
-	res.send();
+	res.render('game', {});
 	// req.params.gameid
 })
 
