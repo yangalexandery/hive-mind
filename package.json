@@ -3,13 +3,14 @@
     "version": "0.0.1",
     "private": true,
     "scripts": {
-      "start": "node app.js"
+        "start": "node app.js"
     },
     "license": "MIT",
     "engines": {
         "node": ">=6.9.1"
     },
     "dependencies": {
-        "express": "^4.15.4"
+        "express": "^4.15.4",
+        "mongoose": "^4.11.11"
     }
 }
