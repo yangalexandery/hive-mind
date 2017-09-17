@@ -11,6 +11,9 @@
 // });
 var resizeBoard = function() {
 	$("#board").width(Math.min($("#board-wrapper").width() - 1, $("#board-wrapper").height() - 1));
+    // $("#board").find('[class^="board-"]').css('width: 100%; height 100%;');
+    TheChessBoard.resize();
+
 }
 
 window.onload = function() {
@@ -51,7 +54,7 @@ $(document).ready(
       // Display the result in the element with id="demo"
       document.getElementById("timer").innerHTML = seconds +1 + "s ";
 
-      // If the count down is finished, write some text 
+      // If the count down is finished, write some text
       if (distance < 0) {
         clearInterval(x);
         timer();
@@ -61,5 +64,5 @@ $(document).ready(
 
 function resizeEnd() {
 	resizeBoard();
-	$("#board").load("#board");
+	// $("#board").load("#board");
 };
