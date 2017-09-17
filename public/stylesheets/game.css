@@ -42,8 +42,7 @@ body {
 }
 
 #teamname {
-	position:relative;
-	overflow:hidden;
 	text-align:center;
-	margin:10px;
+	margin-left:2%;
+	margin-bottom:2%;
 }
