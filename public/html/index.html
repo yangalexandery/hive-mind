@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="js/index.js"></script>
   <link rel="stylesheet" href="stylesheets/index.css">
 </head>
 
@@ -19,9 +20,9 @@
   </div>
 
   <div id = "roomsRow">
-    <button type="button" id="faction-red" class="btn">red</button>
-    <button type="button" id="faction-blue" class="btn">blue</button>
-    <button type="button" id="faction-random" class="btn">random</button>
+    <button type="button" id="faction-red" class="btn" onclick = "toGame('red')">red</button>
+    <button type="button" id="faction-blue" class="btn" onclick = "toGame('blue')">blue</button>
+    <button type="button" id="faction-random" class="btn" onclick = "toGame('random')">random</button>
   </div>
 
 </body>

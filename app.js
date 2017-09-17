@@ -11,16 +11,26 @@ var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var cookie = require('cookie');
 
+
+var fs = require('fs');
+var config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
+
 var MemoryStore = require('memorystore')(session);
 var sessionStore = new MemoryStore({checkPeriod: 3600000});
 
 app.use(session({
   store: sessionStore,
-  secret: 'JAAAAASH',
+  secret: config['session-secret'],
   key: 'connect.sid',
   saveUninitialized: true,
   resave: false
 }));
+
+var redis = require('redis');
+var redisStore = require('connect-redis')(session);
+
+var client = redis.createClient(6379,'hive-mind.redis.cache.windows.net', {auth_pass: config['redis-key'], tls: {servername: 'hive-mind.redis.cache.windows.net'}});
+
 app.use(cookieParser());
 
 server.listen(normalizePort(process.env.PORT || '3000'));
