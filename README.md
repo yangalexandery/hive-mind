@@ -2,10 +2,9 @@
 
 ## Installation
 
-Install node.js, npm, and redis-server. Then:
+Install node.js and npm. Then:
 
 ```
 npm install
-redis-server &
 npm start
 ```
