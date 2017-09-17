@@ -289,20 +289,27 @@ function daemonPhaseTwo() {
 }
 
 var ChildProcess = require('child_process');
+var count = 0;
 
 function startDaemon() {
   game = chess.create();
   countdown_init_ts = Math.floor(Date.now());
   var intern1 = ChildProcess.fork('./intern.js', ['phase-one']);
   intern1.on('message', (m) => {
+    // intern1.send({a: 'd'});
     console.log(m);
     if (m['a'] === 'a') {
       console.log("Phase 1 message");
       // tell all room subscribers to move to phase two
       var intern2 = ChildProcess.fork('./intern.js', ['phase-two']);
+      intern2.send({a: 'd'});
       intern2.on('message', (m) => {
         if (m['a'] === 'b') {
           console.log("Phase 2 message");
+          count++;
+          if (count >= 4) {
+            intern2.send({a: 'c'});
+          }
         }
       });
     }
