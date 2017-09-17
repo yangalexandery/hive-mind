@@ -13,7 +13,7 @@ router.get('/', function(req, res) {
 
 router.get('/game', function(req, res,next) {
   var teamName = req.query.color;
-  if(teamName==undefined or teamName == "random"){
+  if(teamName==undefined|| teamName == "random"){
   	teamName == "red"
   }
   var data = {
