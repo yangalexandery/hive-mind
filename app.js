@@ -134,6 +134,39 @@ io.set('authorization', function(data, accept) {
   }
 });
 
+var game = chess.create();
+var sgc = chess.createSimple();
+
+var isMoveValid = function (src, dest, validMoves) {
+  'use strict';
+
+  var i = 0,
+    isFound = function (expr, sq) {
+      return ((typeof expr === 'string' && sq.file + sq.rank === expr) ||
+        (expr.rank && expr.file &&
+          sq.file === expr.file && sq.rank === expr.rank));
+    },
+    squares = [];
+
+  for (i = 0; i < validMoves.length; i++) {
+    if (isFound(src, validMoves[i].src)) {
+      squares = validMoves[i].squares;
+    }
+  }
+
+  if (squares && squares.length > 0) {
+    for (i = 0; i < squares.length; i++) {
+      if (isFound(dest, squares[i])) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
+// var sgc = require('simpleGameClient');
+// var gc = chess.simpleGameClient.create();
+
 io.on('connection', function(socket){
   var ROOM_KEY = "current-loading-room";
   var sessionID;
@@ -183,11 +216,21 @@ io.on('connection', function(socket){
         });
 
 
-        // socket.on('client-to-server move', function (data) {
-        //   sid_data = socket_to_sid[socket_id];
-        //   // receives coordinates of piece's source and destination.
+        socket.on('client-to-server move', function (data) {
+          sid_data = socket_to_sid[socket.id];
+          console.log(data.from + " " + data.to);
+          var validMoves = sgc.getStatus().validMoves;
 
-        // });
+          var is_valid = isMoveValid(data.from, data.to, sgc.validMoves);
+          if (is_valid) {
+            console.log('move is valid');
+            // TODO: record move here
+          } else {
+            console.log('move is not valid');
+          }
+          // tmp_move = game.move(data.source, data.dest, false);
+          // receives coordinates of piece's source and destination.
+        });
 
 
         socket.on('disconnect', function(data) {
@@ -267,7 +310,6 @@ function joinRoom(roomKey, uid) {
   });
 }
 
-var game = chess.create();
 var countdown_init_ts = Math.floor(Date.now());
 
 function daemonPhaseOne() {
