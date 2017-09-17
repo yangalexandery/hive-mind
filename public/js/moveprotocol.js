@@ -13,6 +13,10 @@ function start_game(roomId) {
  * promotion (optional): if a pawn is getting promoted, the algebraic notation
  *      for the new piece - one of QRNB
  */
+var onDrop = function(source, target) {
+    
+}
+
 function sendMove(from, to, promote) {
     var posRegex = /^[a-h][1-8]$/;
     if (!from.match(posRegex)) {
@@ -31,5 +35,6 @@ function sendMove(from, to, promote) {
         "promote": promote
     };
     socket.emit('move', payload);
+    socket.emit('client-to-server move', payload);
 }
 
