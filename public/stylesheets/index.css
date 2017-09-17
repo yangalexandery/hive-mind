@@ -1,17 +1,29 @@
-h1{
-    font-size: 60px;
-  }
+h1 {
+  font-size: 60px;
+}
 
-  .jumbotron{
-    margin-top: 0px;
-  }
+.jumbotron{
+  margin-top: 0px;
+}
 
-  .btn{
-  	position: relative;
-  	overflow: hidden;
-  	height:100px;
-  	width:25%;
-  	margin:4%;
-  	background-color:#eee;
-  	font-size:25px;
-  }
+.btn{
+  position: relative;
+  overflow: hidden;
+  height:100px;
+  width:25%;
+  margin:4%;
+  background-color:#eee;
+  font-size:25px;
+}
+
+#faction-red:hover {
+  box-shadow: 0px 0px 10px #ff585d;
+}
+
+#faction-blue:hover {
+  box-shadow: 0px 0px 10px #74c1da;
+}
+
+#faction-random:hover {
+  box-shadow: 3px 2px 7px #ff585d, -3px -2px 7px #74d1ea;
+}
