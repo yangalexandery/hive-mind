@@ -27,9 +27,21 @@ app.use(session({
 }));
 
 var redis = require('redis');
+var RedLock = require('redlock');
 // var redisStore = require('connect-redis')(session);
 
-var client = redis.createClient(6379,'hive-mind.redis.cache.windows.net', {auth_pass: config['redis-key'], tls: {servername: 'hive-mind.redis.cache.windows.net'}});
+var client = redis.createClient(config['redis-port'], config['redis-uri'], {auth_pass: config['redis-key'], tls: config['redis-tls']});
+/* var redlock = new RedLock(
+  [client],
+  {
+    retryCount: 10,
+    retryDelay: 200
+  }
+);
+var REDLOCK_RESOURCES = {
+  CREATE_ROOM: "create-room-resource"
+}
+*/
 
 app.use(cookieParser());
 
@@ -106,6 +118,7 @@ io.set('authorization', function(data, accept) {
 });
 
 io.on('connection', function(socket){
+  var ROOM_KEY = "current-loading-room";
   // access session data
   console.log('a user connected');
 
@@ -176,6 +189,21 @@ io.on('connection', function(socket){
     console.log('No cookie transmitted');
   }
   // add the sockets to global data structures
+
+  // check if a room already exists
+  client.EXISTS(ROOM_KEY, function (err, result) {
+    console.log("result: " + result);
+    if (err) {
+      console.log("Everything went to shit");
+      console.log(err);
+      return;
+    }
+    if (result) {
+      console.log('Room has already been created - register self with this room');
+    } else {
+      console.log('Room does not exist yet - attempt to acquire lock and create room');
+    }
+  });
 });
 
 module.exports = app;
