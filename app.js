@@ -370,6 +370,7 @@ function startDaemon() {
             console.log("Move made: " + move_string);
             var move_from = move_string.substring(0, move_string.indexOf(" "));
             var move_to = move_string.substring(move_string.indexOf(" ") + 1);
+            sgc.move(move_from, move_to, 'q');
             for (sid in sid_to_sockets) {
               // console.log(sid_to_sockets[sid]);
               var tmp = sid_to_sockets[sid];

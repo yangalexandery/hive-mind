@@ -7,6 +7,10 @@ function start_game(roomId) {
 }
 
 var team = 'red';
+$('#placeholder-div').ready(function() {
+  console.log($('#placeholder-div').text());
+  set_team($('#placeholder-div').text());
+});
 function set_team(val) {
   console.log(team);
   if (!val) {
@@ -94,6 +98,7 @@ $.getScript('chessboardjs-0.3.0/js/chessboard-0.3.0.js', function() {
       to: target,
       promotion: 'q' // NOTE: always promote to a queen for example simplicity
     });
+    board.move(source + '-' + target);
     console.log(move);
     socket.emit('client-to-server move', move);
 
@@ -133,6 +138,7 @@ $.getScript('chessboardjs-0.3.0/js/chessboard-0.3.0.js', function() {
       square: square,
       verbose: true
     });
+    console.log(game.turn());
 
     // exit if there are no moves available for this square
     if (moves.length === 0) return;
@@ -176,11 +182,11 @@ $.getScript('chessboardjs-0.3.0/js/chessboard-0.3.0.js', function() {
     }
     console.log(data.from, data.to);
     board.move(data.from + "-" + data.to);
-    // game.move({
-    //   from: data.from,
-    //   to: data.to,
-    //   promotion: 'q'
-    // });
+    game.move({
+      from: data.from,
+      to: data.to,
+      promotion: 'q'
+    });
     makeUL(game.history());
   });
   window['TheChessBoard'] = board;
