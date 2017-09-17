@@ -242,6 +242,7 @@ function joinOrCreateRoom(roomKey, uid) {
           console.log("Acquired lock - creating new room");
           joinRoom(roomKey, uid);
           // TODO: fork the managing daemon
+          startDaemon();
           return lock.unlock()
           .catch(function (err) {
             console.log("Died while unlocking - this is fine");
@@ -287,9 +288,28 @@ function daemonPhaseTwo() {
   // publish to room subscribers
 }
 
-
 var ChildProcess = require('child_process');
-var child = ChildProcess.fork('./test.js', ['test']);
+
+function startDaemon() {
+  game = chess.create();
+  countdown_init_ts = Math.floor(Date.now());
+  var intern1 = ChildProcess.fork('./intern.js', ['phase-one']);
+  intern1.on('message', (m) => {
+    console.log(m);
+    if (m['a'] === 'a') {
+      console.log("Phase 1 message");
+      // tell all room subscribers to move to phase two
+      var intern2 = ChildProcess.fork('./intern.js', ['phase-two']);
+      intern2.on('message', (m) => {
+        if (m['a'] === 'b') {
+          console.log("Phase 2 message");
+        }
+      });
+    }
+  });
+}
+startDaemon();
+
 console.log("past the thing");
 
 module.exports = app;

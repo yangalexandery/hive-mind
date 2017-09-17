@@ -3,10 +3,11 @@ console.log("why is this printing");
 
 console.log(process.argv);
 // var 
-var phaseOneDelay = 45;
-var phaseTwoDelay = 15;
+var phaseOneDelay = 10;
+var phaseTwoDelay = 5;
+console.log(process.argv[2]);
 
-if (process.argv[2] === 'phase one') {
+if (process.argv[2] === 'phase-one') {
 	sleep.sleep(phaseOneDelay);
 	process.send({a: 'a'});
 
