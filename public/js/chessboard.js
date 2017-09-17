@@ -110,6 +110,13 @@ $.getScript('chessboardjs-0.3.0/js/chessboard-0.3.0.js', function() {
     }
   }
   // makeUL(['e4', 'e5', 'f4', 'exf4'])
+    //
+  var endGame = function (winner, message) {
+    game.over = true;
+    var winner_str = winner === 'b' ? 'Blue' : 'Red';
+    alert(message + ' ' + winner_str + ' wins!');
+    window.location.reload();
+  };
 
   socket.on('server-to-client move', function(data) {
     console.log('received');
@@ -127,6 +134,16 @@ $.getScript('chessboardjs-0.3.0/js/chessboard-0.3.0.js', function() {
     makeUL(game.history());
   });
 
+  socket.on('checkmate', function(data) {
+    var winner = game.turn() === 'r' ? 'b' : 'r';
+    endGame(winner, "Checkmate!");
+  });
+
+  socket.on('resign', function(data) {
+    var winner = game.turn()
+    endGame(winner, "Resignation!");
+  });
+
   var onMouseoverSquare = function(square, piece) {
     // get list of possible moves for this square
     var moves = game.moves({
@@ -135,6 +152,9 @@ $.getScript('chessboardjs-0.3.0/js/chessboard-0.3.0.js', function() {
     });
 
     // exit if there are no moves available for this square
+    if (game.over) {
+        return false;
+    }
     if (moves.length === 0) return;
     if ((game.turn() === 'w' && getTeam() === 'blue') || (game.turn() == 'b' && getTeam() === 'red')) {
       return false;
