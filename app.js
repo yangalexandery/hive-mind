@@ -12,7 +12,7 @@ var cookieParser = require('cookie-parser');
 var cookie = require('cookie');
 
 
-var sleep = require('sleep');
+var sleep = require('system-sleep');
 var chess = require('chess');
 
 
@@ -274,13 +274,13 @@ function daemonPhaseOne() {
   // this is a child process
   game = chess.create();
   countdown_init_ts = Math.floor(Date.now());
-  sleep.sleep(phaseOneDelay);
+  // sleep.sleep(phaseOneDelay);
   // tell all room subscribers to move to phase two
   daemonPhaseTwo();
 }
 
 function daemonPhaseTwo() {
-  sleep.sleep(phaseTwoDelay);
+  // sleep.sleep(phaseTwoDelay);
   // pull from redis
   // process redis data
   // update board state
@@ -302,7 +302,6 @@ function startDaemon() {
       console.log("Phase 1 message");
       // tell all room subscribers to move to phase two
       var intern2 = ChildProcess.fork('./intern.js', ['phase-two']);
-      intern2.send({a: 'd'});
       intern2.on('message', (m) => {
         if (m['a'] === 'b') {
           console.log("Phase 2 message");

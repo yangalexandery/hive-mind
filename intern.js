@@ -1,17 +1,17 @@
-var sleep = require('sleep');
+var sleep = require('system-sleep');
 console.log("why is this printing");
 
 console.log(process.argv);
 // var 
-var phaseOneDelay = 2;
-var phaseTwoDelay = 2;
+var phaseOneDelay = 2000;
+var phaseTwoDelay = 2000;
 console.log(process.argv[2]);
 
 process.on('message', (m) => {
 	console.log("MESSAGE RECEIVED");
 });
 if (process.argv[2] === 'phase-one') {
-	sleep.sleep(phaseOneDelay);
+	sleep(phaseOneDelay);
 	process.send({a: 'a'});
 
 	process.on('message', (m) => {
@@ -25,7 +25,7 @@ if (process.argv[2] === 'phase-one') {
 		stop_condition = false;
 	});
 	while(stop_condition) {
-		sleep.sleep(phaseTwoDelay);
+		sleep(phaseTwoDelay);
 		process.send({a: 'b'});
 	};
 
