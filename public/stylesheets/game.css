@@ -40,7 +40,6 @@ body {
 
 .right-content {
     height: 100%;
-    margin-top:2%;
     margin-right:5%;
     /*background-color: blue;*/
 }
@@ -121,9 +120,18 @@ body {
 
 #teamname{
   margin-left:0px;
-  margin-top:15px;
   font-size: 20px;
-  width:100%;
+  width:80%;
+  position:relative;
+}
+
+#timer{
+  margin-top:10px;
+  margin-left:0px;
+  /*height:10px;*/
+  font-size: 20px;
+  /*float:right;*/
+  width:10%;
   position:relative;
 }
 /*#currname{

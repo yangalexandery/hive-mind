@@ -32,6 +32,32 @@ $(window).resize(function() {
     }
 })
 
+$(document).ready(
+	function timer() {
+    var countDownDate = new Date().getTime() + 30000;
+
+    // Update the count down every 1 second
+    var x = setInterval(function() {
+
+      // Get todays date and time
+      var now = new Date().getTime();
+
+      // Find the distance between now an the count down date
+      var distance = countDownDate - now;
+
+      // Time calculations for days, hours, minutes and seconds
+      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      // Display the result in the element with id="demo"
+      document.getElementById("timer").innerHTML = seconds +1 + "s ";
+
+      // If the count down is finished, write some text 
+      if (distance < 0) {
+        clearInterval(x);
+        timer();
+      }
+    }, 1000);
+})
 
 function resizeEnd() {
 	resizeBoard();
