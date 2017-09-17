@@ -17,6 +17,10 @@ window.onload = function() {
 	resizeBoard();
 };
 
+function switchTab(id){
+	$("#"+id).show().siblings('div').hide();
+};
+
 var rtime;
 var timeout = false;
 var delta = 500;

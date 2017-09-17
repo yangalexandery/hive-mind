@@ -34,9 +34,9 @@
                 </div>
                 <div class="right-content col-4" style="border:2px">
                     <div class="tab" style="margin-bottom:15px">
-                        <button class="tablinks" onclick="replace_this_function()">Poll</button>
-                        <button class="tablinks" onclick="replace_this_function()">History</button>
-                        <button class = "tablinks" onclick = "replace_this_function()">Chat</button>
+                        <button class="tablinks" onclick="switchTab('poll')">Poll</button>
+                        <button class="tablinks" onclick="switchTab('history')">History</button>
+                        <button class = "tablinks" onclick = "switchTab('chat')">Chat</button>
                     </div>
                     <div id = "chat">
                         <!-- <div id="tlkio" data-channel="HiveMind" data-theme="theme--minimal" style="width:100%;height:400px;"></div><script async src="http://tlk.io/embed.js" type="text/javascript"></script> -->
@@ -50,37 +50,10 @@
                         </form> -->
 
                         <script src="js/firesbasechat.js"></script>
-<!-- 
-                        <script>
-                          function initChat(user) {
-                            // Get a Firebase Database ref
-                            var chatRef = firebase.database().ref("chat");
-
-                            // Create a Firechat instance
-                            var chat = new FirechatUI(chatRef, document.getElementById("firechat-wrapper"));
-
-                            // Set the Firechat user
-                            chat.setUser(user.uid, user.displayName);
-                          }
-
-                          firebase.auth().onAuthStateChanged(function(user) {
-                            // Once authenticated, instantiate Firechat with the logged in user
-                            if (user) {
-                            initChat(user);
-                            }
-                            });
-
-                            // Log the user in via Twitter (or Google or GitHub or email / password or etc.)
-                            var provider = new firebase.auth.TwitterAuthProvider();
-                            firebase.auth().signInWithPopup(provider).catch(function(error) {
-                            console.log("Error authenticating user:", error);
-                            });
-                        </script> -->
-
                         <div id="firechat-wrapper"></div>
                         <form>
                           <div class="row">
-                            <div class="large-12 columns">
+                            <div class="messages">
                               <div id='messagesDiv' class="msg-wrapper"></div>
                               <hr />
                              </div>
@@ -100,8 +73,26 @@
                               </label>
                             </div>
                           </div>
-
                         </form>
+
+                    <div style = "height:60%">
+                        <div id = "poll">
+                            Most popular moves:
+                        </div>
+                        <div id = "history">
+                            Previous moves:
+                        </div>
+                        <div id="chat" class = "chat vsc-initialized">
+                            <!-- <div id="tlkio" data-channel="HiveMind" data-theme="theme-minimal" style="width:100%;height:400px;"></div><script async src="http://tlk.io/embed.js" type="text/javascript"></script> -->
+                            <script src="js/testchat.js"></script>
+                            <!-- <div class="members-count"></div> -->
+                            <div class="members-list"></div>
+                            <div class="messages"></div>
+                            <form class="message-form" onsubmit="return false;">
+                                <input class="message-form__input" placeholder="Type a message.." type="text"/>
+                                <input class="message-form__button" value="Send" type="submit"/>
+                            </form>
+                        </div>
                     </div>
                     <div id="teamname" class="row ">Your team is {{teamName}}, {{currTeam}}'s turn</div>
                     <button type="button" id="leaveGame" class="btn" onclick="location.href = '/';" style = "margin-top:20px" >Leave Game</button>
@@ -110,5 +101,4 @@
         </div>
         <div id="board" style="width: 400px"></div>
     </body> 
-    <script>sendMove("a1", "a2");</script>
 </html>
