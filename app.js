@@ -10,7 +10,10 @@ var connect = require('connect');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var cookie = require('cookie');
+
+
 var sleep = require('sleep');
+var chess = require('chess');
 
 
 var fs = require('fs');
@@ -236,10 +239,13 @@ io.on('connection', function(socket){
   });
 });
 
+var game = chess.create();
+var countdown_init_ts = Math.floor(Date.now());
+
 function daemonPhaseOne() {
   // this is a child process
-  // create brand new board state
-  // record timestamp for countdown
+  game = chess.create();
+  countdown_init_ts = Math.floor(Date.now());
   sleep.sleep(phaseOneDelay);
   // tell all room subscribers to move to phase two
   daemonPhaseTwo();
