@@ -12,7 +12,7 @@ router.get('/', function(req, res) {
   res.sendFile(path.resolve('public/html/index.html'));
 });
 
-router.get('/game', function(req, res) {
+router.get('/game', function(req, res,next) {
   res.render('game', {});
   // req.params.gameid
 });
