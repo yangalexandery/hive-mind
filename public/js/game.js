@@ -13,6 +13,7 @@ var resizeBoard = function() {
 	$("#board").width(Math.min($("#board-wrapper").width() - 1, $("#board-wrapper").height() - 1));
     // $("#board").find('[class^="board-"]').css('width: 100%; height 100%;');
     TheChessBoard.resize();
+    console.log(window.onresize.name);
 
 }
 
@@ -24,16 +25,15 @@ function switchTab(id){
 	$("#"+id).show().siblings('div').hide();
 };
 
-var rtime;
-var timeout = false;
-var delta = 500;
-$(window).resize(function() {
-    rtime = new Date();
+window.onresize = function dothething() {
+    var timeout = false;
+    var delta = 500;
+    console.log('resize triggered');
     if (timeout === false) {
         timeout = true;
-        setTimeout(resizeEnd, delta);
+        setTimeout(resizeBoard, delta);
     }
-})
+};
 
 $(document).ready(
 	function timer() {

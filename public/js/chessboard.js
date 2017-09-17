@@ -100,6 +100,16 @@ $.getScript('chessboardjs-0.3.0/js/chessboard-0.3.0.js', function() {
     // illegal move
     if (move === null) return 'snapback';
   };
+  
+  function makeUL(array){
+    var list= document.getElementById("historyList")
+    for(var i=array.length-1; i >=0; i--){
+      var item =document.createElement('li');
+      item.appendChild(document.createTextNode(array[i]));
+      list.appendChild(item);
+    }
+  }
+  // makeUL(['e4', 'e5', 'f4', 'exf4'])
 
   socket.on('server-to-client move', function(data) {
     console.log('received');
@@ -107,12 +117,12 @@ $.getScript('chessboardjs-0.3.0/js/chessboard-0.3.0.js', function() {
       console.log('undoing');
       game.undo();
     }
-    gam
-    // game.move({
-    //   from: data.from,
-    //   to: data.target,
-    //   promotion: 'q'
-    // });
+    game.move({
+      from: data.from,
+      to: data.target,
+      promotion: 'q'
+    });
+    makeUL(game.history())
   });
 
   var onMouseoverSquare = function(square, piece) {
