@@ -15,21 +15,21 @@ var messagesRef = new Firebase('https://hivemind-2017.firebaseio.com');
 // REGISTER DOM ELEMENTS
 var messageField = $('#messageInput');
 var nameField = $('#nameInput');
-// var messageList = $('#example-messages');
-var messageList = document.getElementById('example-messages');
+var messageList = $('#example-messages');
+// var messageList = document.getElementById('example-messages');
 
 // LISTEN FOR KEYPRESS EVENT
-messageField.keypress(function (e) {
-  if (e.keyCode == 13) {
-    //FIELD VALUES
-    var username = nameField.val();
-    var message = messageField.val();
+// messageField.keypress(function (e) {
+//   if (e.keyCode == 13) {
+//     //FIELD VALUES
+//     var username = nameField.val();
+//     var message = messageField.val();
 
-    //SAVE DATA TO FIREBASE AND EMPTY FIELD
-    messagesRef.push({name:username, text:message});
-    messageField.val('');
-  }
-});
+//     //SAVE DATA TO FIREBASE AND EMPTY FIELD
+//     messagesRef.push({name:username, text:message});
+//     messageField.val('');
+//   }
+// });
 
 // Add a callback that is triggered for each chat message.
 messagesRef.limitToLast(10).on('child_added', function (snapshot) {
@@ -44,13 +44,17 @@ messagesRef.limitToLast(10).on('child_added', function (snapshot) {
   nameElement.text(username);
   messageElement.text(message).prepend(nameElement);
 
-  console.log(messageList.value)
+  console.log(messageList.type);
 
   //ADD MESSAGE
-  messageElement.appendChild(messageElement)
+  // messageList.appendChild(messageElement.get(0));
+  messageList.append(messageElement);
 
   //SCROLL TO BOTTOM OF MESSAGE LIST
-  messageElement[0].scrollTop = $('example-messages').scrollHeight;
+  // messageList[0].scrollTop = $('example-messages').scrollHeight;
+  messageList.animate({scrollTop: messageList.prop("scrollHeight")}, 500);
+  //messageList.scrollTop(messageList.height());
+  console.log('current scrollTop: ' + messageList.scrollTop());
 });
 
 firebase.auth().signInAnonymously().catch(function(error) {
