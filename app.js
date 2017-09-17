@@ -31,7 +31,14 @@ var RedLock = require('redlock');
 // var redisStore = require('connect-redis')(session);
 
 var client = redis.createClient(config['redis-port'], config['redis-uri'], {auth_pass: config['redis-key'], tls: config['redis-tls']});
-/* var redlock = new RedLock(
+client.FLUSHDB(function (err, success) {
+  if (err) {
+    console.log("Failed to clear Redis DB - this is probably a bad sign");
+  } else {
+    console.log("Cleared old Redis data");
+  }
+});
+var redlock = new RedLock(
   [client],
   {
     retryCount: 10,
@@ -41,7 +48,7 @@ var client = redis.createClient(config['redis-port'], config['redis-uri'], {auth
 var REDLOCK_RESOURCES = {
   CREATE_ROOM: "create-room-resource"
 }
-*/
+
 
 app.use(cookieParser());
 
@@ -202,6 +209,25 @@ io.on('connection', function(socket){
       console.log('Room has already been created - register self with this room');
     } else {
       console.log('Room does not exist yet - attempt to acquire lock and create room');
+      redlock.lock(REDLOCK_RESOURCES.CREATE_ROOM, 5000).then(
+        function (lock) {
+          console.log("Acquired lock - creating new room");
+          client.SET(ROOM_KEY, 1, function (err, result) {
+            if (err) {
+              console.log("Tried and failed to initialize room. We are so fucked.");
+            }
+          });
+          return lock.unlock()
+          .catch(function (err) {
+            console.log("Died while unlocking - this is fine");
+          });
+        },
+        function (err) {
+          // hopefully someone else is creating the room
+          console.log("Failed to acquire lock - waiting on room creation");
+        }
+      );
+
     }
   });
 });
