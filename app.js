@@ -314,7 +314,6 @@ function startDaemon() {
     }
   });
 }
-startDaemon();
 
 console.log("past the thing");
 
