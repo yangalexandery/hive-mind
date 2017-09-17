@@ -102,8 +102,7 @@
                                     $('.messageForm').keydown(function(e){
                                       if(event.keyCode==13){
                                         console.log("hey")
-                                        messagesRef.push({name:event.currentTarget.value, text: event.currentTarget.value});
-                                        event.preventDefault();
+                                        messagesRef.push({name:$('#nameInput').val(), text: event.currentTarget.value});
                                         event.currentTarget.value = "";
 
                                       }
