@@ -4,8 +4,8 @@ var redis = require('redis'),
   client = redis.createClient();
 var bluebird = require('bluebird');
 
-bluebird.PromisifyAll(redis.RedisClient.prototype);
-bluebird.PromisifyAll(redis.Multi.prototype);
+bluebird.promisifyAll(redis.RedisClient.prototype);
+bluebird.promisifyAll(redis.Multi.prototype);
 
 router.get('/', function(req, res) {
   var path = require('path');
