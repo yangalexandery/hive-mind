@@ -23,6 +23,7 @@
     "hbs": "^4.0.1",
     "memorystore": "^1.5.0",
     "redis": "^2.8.0",
+    "redlock": "^3.0.0",
     "socket.io": "^2.0.3",
     "uikit": "^3.0.0-beta.30"
   }
