@@ -21,19 +21,10 @@ var config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 var redis = require('redis');
 var redisStore = require('connect-redis')(session);
 
-var client = redis.createClient();
+var client = redis.createClient(6379,'hive-mind.redis.cache.windows.net', {auth_pass: config['redis-key'], tls: {servername: 'hive-mind.redis.cache.windows.net'}});
 
 app.use(cookieParser());
-app.use(session({
-    secret: 'mysecret',
-    store: new redisStore({client: client, ttl: 260}),
-    saveUninitialized: false,
-    resave: false,
-    cookie: {secure: true}
-}));
-// var client = redis.createClient(6379,'hive-mind.redis.cache.windows.net', {auth_pass: config['redis-key'], tls: {servername: 'hive-mind.redis.cache.windows.net'}});
-
-// app.use(session({ store: sessionStore, secret: 'JAAAAASH' }));
+app.use(session({ store: sessionStore, secret: 'JAAAAASH' }));
 
 server.listen(normalizePort(process.env.PORT || '3000'));
 
