@@ -10,6 +10,7 @@ var connect = require('connect');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var cookie = require('cookie');
+var sleep = require('sleep');
 
 
 var fs = require('fs');
@@ -50,6 +51,9 @@ var REDLOCK_RESOURCES = {
 }
 
 
+var phaseOneDelay = 45;
+var phaseTwoDelay = 15;
+
 app.use(cookieParser());
 
 server.listen(normalizePort(process.env.PORT || '3000'));
@@ -75,7 +79,7 @@ function normalizePort(val) {
  *********************/
 
 var sid_to_sockets = {}; // session ID to array of all sockets
-var sid_to_sub_sockets = {}; // session ID to array of subscription-sockets
+var sid_to_sub_sockets = {}; // session ID to subscription-sockets. This is one-to-one.
 var socket_to_sid = {}; // sockets to session ID
 
 app.set('views', path.join(__dirname, 'views'));
@@ -231,6 +235,24 @@ io.on('connection', function(socket){
     }
   });
 });
+
+function daemonPhaseOne() {
+  // this is a child process
+  // create brand new board state
+  // record timestamp for countdown
+  sleep.sleep(phaseOneDelay);
+  // tell all room subscribers to move to phase two
+  daemonPhaseTwo();
+}
+
+function daemonPhaseTwo() {
+  sleep.sleep(phaseTwoDelay);
+  // pull from redis
+  // process redis data
+  // update board state
+  // reset redis poll data
+  // publish to room subscribers
+}
 
 module.exports = app;
 
