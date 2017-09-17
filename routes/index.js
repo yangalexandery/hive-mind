@@ -13,7 +13,15 @@ router.get('/', function(req, res) {
 });
 
 router.get('/game', function(req, res,next) {
-  res.render('game', {});
+  var teamName = req.query.color;
+  if(teamName==undefined){
+  	teamName == "red"
+  }
+  console.log(teamName)
+  var data = {
+  	'teamName': teamName,
+  }
+  res.render('game', data);
   // req.params.gameid
 });
 
