@@ -30,8 +30,8 @@ var redis = require('redis');
 var RedLock = require('redlock');
 // var redisStore = require('connect-redis')(session);
 
-var client = redis.createClient(config['redis-port'], config['redis-uri'], {auth_pass: config['redis-key'], tls: {servername: 'hive-mind.redis.cache.windows.net'}});
-var redlock = new RedLock(
+var client = redis.createClient(config['redis-port'], config['redis-uri'], {auth_pass: config['redis-key'], tls: config['redis-tls']});
+/* var redlock = new RedLock(
   [client],
   {
     retryCount: 10,
@@ -41,6 +41,7 @@ var redlock = new RedLock(
 var REDLOCK_RESOURCES = {
   CREATE_ROOM: "create-room-resource"
 }
+*/
 
 app.use(cookieParser());
 
@@ -108,14 +109,15 @@ io.set('authorization', function(data, accept) {
 });
 
 io.on('connection', function(socket){
-  ROOM_KEY = "current-loading-room";
+  var ROOM_KEY = "current-loading-room";
   // access session data
   console.log('a user connected');
   // check if a room already exists
   client.EXISTS(ROOM_KEY, function (err, result) {
-    console.log("Entered callback");
-    if (err !== undefined) {
+    console.log("result: " + result);
+    if (err) {
       console.log("Everything went to shit");
+      console.log(err);
       return;
     }
     if (result) {
@@ -124,6 +126,7 @@ io.on('connection', function(socket){
       console.log('Room does not exist yet - attempt to acquire lock and create room');
     }
   });
+  console.log('Please end my life');
   socket.on('disconnect', function () {
     console.log('a user disconnected');
   });
