@@ -19,8 +19,7 @@
     <body>
         <div class="container-fluid content">
             <div class="row justify-content-around sub-content">
-                <div id="board-wrapper" class="left-content col-6">
-                    <div id="teamname" class="row ">Your team is {{teamName}}, {{currTeam}}'s turn</div>
+                <div id="board-wrapper" class="left-content col-6" style = "padding-top:10px">
                     <div id="board" style="margin: auto"></div>
                 </div>
                 <div class="right-content col-4" style="border:2px">
@@ -39,6 +38,7 @@
                             <input class="message-form__button" value="Send" type="submit"/>
                         </form>
                     </div>
+                    <div id="teamname" class="row ">Your team is {{teamName}}, {{currTeam}}'s turn</div>
                     <button type="button" id="leaveGame" class="btn" onclick="location.href = '/';" style = "margin-top:20px" >Leave Game</button>
                 </div>
             </div>

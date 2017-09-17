@@ -5,6 +5,7 @@
 body {
     margin: 0px;
     height: 100vh;
+    overflow:hidden;
     /*overflow-y: scroll;*/
 }
 
@@ -34,7 +35,7 @@ body {
 
 .left-content {
     height: 100%;
-    overflow-y: scroll;
+    /*overflow-y: scroll;*/
 }
 
 .right-content {
@@ -104,3 +105,16 @@ body {
 .message-form__button {
   margin: 10px;
 }
+
+#teamname{
+  margin-top:15px;
+  font-size: 20px;
+  width:100%;
+  position:relative;
+}
+/*#currname{
+  margin-top:10px;
+  font-size: 20px;
+  width:100%;
+  position:relative;
+}*/
