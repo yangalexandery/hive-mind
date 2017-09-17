@@ -23,6 +23,11 @@
                     <div id="board" style="margin: auto"></div>
                 </div>
                 <div class="right-content col-4" style="border:2px">
+                    <div class="row" style="width:100%">
+                        <script src ="js/game.js"></script>
+                        <div id="teamname" class="row ">Your team is {{teamName}}, {{currTeam}}'s turn</div>
+                        <div id="timer" class='row"'></div> <!--https://www.w3schools.com/howto/howto_js_countdown.asp-->
+                    </div>
                     <div class="tab" style="margin-bottom:15px">
                         <button class="tablinks" onclick="switchTab('poll')">Poll</button>
                         <button class="tablinks" onclick="switchTab('history')">History</button>
@@ -47,7 +52,6 @@
                             </form>
                         </div>
                     </div>
-                    <div id="teamname" class="row ">Your team is {{teamName}}, {{currTeam}}'s turn</div>
                     <button type="button" id="leaveGame" class="btn" onclick="location.href = '/';" style = "margin-top:20px" >Leave Game</button>
                 </div>
             </div>
