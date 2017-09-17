@@ -62,19 +62,6 @@
                             <ul id = "historyList">
                             </ul>
                         </div>
-<!--                         <script>
-                          Initialize Firebase
-                          var firebase = require("firebase");
-                          var config = {
-                            apiKey: "AIzaSyAP6WPHg0JFVDClh5hGPMX6tVT2xYmyx_0",
-                            authDomain: "hivemind-2017.firebaseapp.com",
-                            databaseURL: "https://hivemind-2017.firebaseio.com",
-                            projectId: "hivemind-2017",
-                            storageBucket: "hivemind-2017.appspot.com",
-                            messagingSenderId: "665654390800"
-                          };
-                          firebase.initializeApp(config);
-                        </script> -->
 
 
                         <div id="chat">
@@ -94,19 +81,7 @@
                               </footer>
                             </div>
 
-                            <script>
-                                $(document).ready(function(){
-                                    $('.messageForm').keydown(function(e){
-                                      if(event.keyCode==13){
-                                        console.log("hey")
-                                        messagesRef.push({name:$('#nameInput').val(), text: event.currentTarget.value});
-                                        event.currentTarget.value = "";
-
-                                      }
-                                    });
-                                });
-                            </script>
-                        </div>
+<                        </div>
 
                     </div>
                     <button type="button" id="leaveGame" class="btn" onclick="location.href = '/';" style = "margin-top:20px" >Leave Game</button>

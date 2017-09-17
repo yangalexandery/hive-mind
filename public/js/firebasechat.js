@@ -16,20 +16,18 @@ var messagesRef = new Firebase('https://hivemind-2017.firebaseio.com');
 var messageField = $('#messageInput');
 var nameField = $('#nameInput');
 var messageList = $('#example-messages');
-// var messageList = document.getElementById('example-messages');
 
-// LISTEN FOR KEYPRESS EVENT
-// messageField.keypress(function (e) {
-//   if (e.keyCode == 13) {
-//     //FIELD VALUES
-//     var username = nameField.val();
-//     var message = messageField.val();
 
-//     //SAVE DATA TO FIREBASE AND EMPTY FIELD
-//     messagesRef.push({name:username, text:message});
-//     messageField.val('');
-//   }
-// });
+$(document).ready(function(){
+    $('.messageForm').keydown(function(e){
+      if(event.keyCode==13){
+        console.log("hey")
+        messagesRef.push({name:$('#nameInput').val(), text: event.currentTarget.value});
+        event.currentTarget.value = "";
+
+      }
+    });
+});
 
 // Add a callback that is triggered for each chat message.
 messagesRef.limitToLast(10).on('child_added', function (snapshot) {
