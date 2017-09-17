@@ -14,17 +14,32 @@ h1 {
   margin:4%;
   background-color:#eee;
   font-size:25px;
+  border-radius: 5;
+}
+
+#faction-red {
+  border: 1px solid #B85450;
+  background-color: #F8CECC;
 }
 
 #faction-red:hover {
   box-shadow: 0px 0px 10px #ff585d;
 }
 
+#faction-blue {
+  border: 1px solid #6C8EBF;
+  background-color: #DAE8FC;
+}
+
 #faction-blue:hover {
   box-shadow: 0px 0px 10px #74c1da;
+}
+
+#faction-random {
+  border: 1px solid #aaa;
+  background-color: #F5F5F5;
 }
 
 #faction-random:hover {
   box-shadow: 3px 2px 7px #ff585d, -3px -2px 7px #74d1ea;
 }
-
