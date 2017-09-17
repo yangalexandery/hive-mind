@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var redis = require('redis'),
-  client = redis.createClient();
+var redis = require('redis');
 var bluebird = require('bluebird');
 
 bluebird.promisifyAll(redis.RedisClient.prototype);
