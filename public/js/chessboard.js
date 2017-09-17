@@ -6,6 +6,20 @@ function start_game(roomId) {
     room = roomId;
 }
 
+var team = 'red';
+function set_team(val) {
+  console.log(team);
+  if (!val) {
+    return;
+  }
+  if (val.charAt(0) === 'r') {
+    team = 'red';
+  }
+  if (val.charAt(0) === 'b') {
+    team = 'blue';
+  }
+}
+
 /*
  * Send a move to the webserver
  * from: square the piece is moving from, in chess notation
@@ -34,6 +48,9 @@ function start_game(roomId) {
 //     socket.emit('move', payload);
 //     socket.emit('client-to-server move', payload);
 // }
+function getTeam() {
+  return team;// TODO: fix this
+}
 
 
 $.getScript('chessboardjs-0.3.0/js/chessboard-0.3.0.js', function() {
@@ -63,6 +80,9 @@ $.getScript('chessboardjs-0.3.0/js/chessboard-0.3.0.js', function() {
         (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
       return false;
     }
+    if ((game.turn() === 'w' && getTeam() === 'blue') || (game.turn() == 'b' && getTeam() === 'red')) {
+      return false;
+    }
   };
 
   var onDrop = function(source, target) {
@@ -80,6 +100,17 @@ $.getScript('chessboardjs-0.3.0/js/chessboard-0.3.0.js', function() {
     if (move === null) return 'snapback';
   };
 
+  socket.on('server-to-client move', function(data) {
+    if ((getTeam() === 'red' && game.turn() === 'b') || (getTeam() === 'blue' && game.turn() === 'w' && game.history().length > 0)) {
+      game.undo();
+    }
+    game.move({
+      from: data.from,
+      to: data.target,
+      promotion: 'q'
+    });
+  });
+
   var onMouseoverSquare = function(square, piece) {
     // get list of possible moves for this square
     var moves = game.moves({
@@ -89,6 +120,9 @@ $.getScript('chessboardjs-0.3.0/js/chessboard-0.3.0.js', function() {
 
     // exit if there are no moves available for this square
     if (moves.length === 0) return;
+    if ((game.turn() === 'w' && getTeam() === 'blue') || (game.turn() == 'b' && getTeam() === 'red')) {
+      return false;
+    }
 
     // highlight the square they moused over
     greySquare(square);
