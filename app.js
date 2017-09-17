@@ -111,6 +111,9 @@ io.set('authorization', function(data, accept) {
   if (data.headers.cookie) {
     data.cookie = cookie.parse(data.headers.cookie);
     data.sessionID = data.cookie['connect.sid'].substring(2).split('.')[0];
+    if (data.sessionID in sid_to_sockets) {
+      return accept('Rejecting duplicate socket', false);
+    }
     console.log('Session cookie: ' + data.sessionID);
     sessionStore.get(data.sessionID, function (err, session) {
       if (err || !session) {
@@ -130,6 +133,7 @@ io.set('authorization', function(data, accept) {
 
 io.on('connection', function(socket){
   var ROOM_KEY = "current-loading-room";
+  var sessionID;
   // access session data
   console.log('a user connected');
 
@@ -198,11 +202,16 @@ io.on('connection', function(socket){
     });
   } else {
     console.log('No cookie transmitted');
+    return;
   }
   // add the sockets to global data structures
 
   // check if a room already exists
-  client.EXISTS(ROOM_KEY, function (err, result) {
+  joinOrCreateRoom(ROOM_KEY, sessionID);
+});
+
+function joinOrCreateRoom(roomKey, uid) {
+  client.EXISTS(roomKey, function (err, result) {
     console.log("result: " + result);
     if (err) {
       console.log("Everything went to shit");
@@ -211,16 +220,15 @@ io.on('connection', function(socket){
     }
     if (result) {
       console.log('Room has already been created - register self with this room');
+      joinRoom(roomKey, uid);
     } else {
+      LOCK_TIMEOUT = 5000;
       console.log('Room does not exist yet - attempt to acquire lock and create room');
-      redlock.lock(REDLOCK_RESOURCES.CREATE_ROOM, 5000).then(
+      redlock.lock(REDLOCK_RESOURCES.CREATE_ROOM, LOCK_TIMEOUT).then(
         function (lock) {
           console.log("Acquired lock - creating new room");
-          client.SET(ROOM_KEY, 1, function (err, result) {
-            if (err) {
-              console.log("Tried and failed to initialize room. We are so fucked.");
-            }
-          });
+          joinRoom(roomKey, uid);
+          // TODO: fork the managing daemon
           return lock.unlock()
           .catch(function (err) {
             console.log("Died while unlocking - this is fine");
@@ -228,13 +236,22 @@ io.on('connection', function(socket){
         },
         function (err) {
           // hopefully someone else is creating the room
-          console.log("Failed to acquire lock - waiting on room creation");
+          console.log("Failed to acquire lock - retrying room connection in 5 seconds");
+          setTimeout(function () {joinOrCreateRoom(roomKey, uid);}, LOCK_TIMEOUT);
         }
       );
 
     }
   });
-});
+}
+
+function joinRoom(roomKey, uid) {
+  client.SADD(roomKey, uid, function (err, result) {
+    if (err) {
+      console.log("Failed to join room");
+    }
+  });
+}
 
 function daemonPhaseOne() {
   // this is a child process
