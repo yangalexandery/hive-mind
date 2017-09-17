@@ -20,10 +20,10 @@ var messageList = $('#example-messages');
 
 $(document).ready(function(){
     $('.messageForm').keydown(function(e){
-      if(event.keyCode==13){
+      if(e.keyCode==13){
         console.log("hey")
-        messagesRef.push({name:$('#nameInput').val(), text: event.currentTarget.value});
-        event.currentTarget.value = "";
+        messagesRef.push({name:$('#nameInput').val(), text: e.currentTarget.value});
+        e.currentTarget.value = "";
 
       }
     });
