@@ -117,12 +117,14 @@ $.getScript('chessboardjs-0.3.0/js/chessboard-0.3.0.js', function() {
       console.log('undoing');
       game.undo();
     }
-    game.move({
-      from: data.from,
-      to: data.target,
-      promotion: 'q'
-    });
-    makeUL(game.history())
+    console.log(data.from, data.to);
+    board.move(data.from + "-" + data.to);
+    // game.move({
+    //   from: data.from,
+    //   to: data.to,
+    //   promotion: 'q'
+    // });
+    makeUL(game.history());
   });
 
   var onMouseoverSquare = function(square, piece) {
@@ -165,5 +167,21 @@ $.getScript('chessboardjs-0.3.0/js/chessboard-0.3.0.js', function() {
     onSnapEnd: onSnapEnd
   };
   board = ChessBoard('board', cfg);
+
+  socket.on('server-to-client move', function(data) {
+    console.log('received');
+    if ((getTeam() === 'red' && game.turn() === 'b') || (getTeam() === 'blue' && game.turn() === 'w' && game.history().length > 0)) {
+      console.log('undoing');
+      game.undo();
+    }
+    console.log(data.from, data.to);
+    board.move(data.from + "-" + data.to);
+    // game.move({
+    //   from: data.from,
+    //   to: data.to,
+    //   promotion: 'q'
+    // });
+    makeUL(game.history());
+  });
   window['TheChessBoard'] = board;
 });
