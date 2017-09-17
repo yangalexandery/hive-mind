@@ -94,6 +94,7 @@ $.getScript('chessboardjs-0.3.0/js/chessboard-0.3.0.js', function() {
       to: target,
       promotion: 'q' // NOTE: always promote to a queen for example simplicity
     });
+    console.log(move);
     socket.emit('client-to-server move', move);
 
     // illegal move
@@ -101,14 +102,17 @@ $.getScript('chessboardjs-0.3.0/js/chessboard-0.3.0.js', function() {
   };
 
   socket.on('server-to-client move', function(data) {
+    console.log('received');
     if ((getTeam() === 'red' && game.turn() === 'b') || (getTeam() === 'blue' && game.turn() === 'w' && game.history().length > 0)) {
+      console.log('undoing');
       game.undo();
     }
-    game.move({
-      from: data.from,
-      to: data.target,
-      promotion: 'q'
-    });
+    gam
+    // game.move({
+    //   from: data.from,
+    //   to: data.target,
+    //   promotion: 'q'
+    // });
   });
 
   var onMouseoverSquare = function(square, piece) {

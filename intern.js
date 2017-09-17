@@ -3,8 +3,8 @@ console.log("why is this printing");
 
 console.log(process.argv);
 // var 
-var phaseOneDelay = 2000;
-var phaseTwoDelay = 2000;
+var phaseOneDelay = 30000;
+var phaseTwoDelay = 10000;
 console.log(process.argv[2]);
 
 process.on('message', (m) => {

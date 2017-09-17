@@ -136,6 +136,8 @@ io.set('authorization', function(data, accept) {
 
 var game = chess.create();
 var sgc = chess.createSimple();
+var move_record = {};
+var red_to_move = true;
 
 var isMoveValid = function (src, dest, validMoves) {
   'use strict';
@@ -224,6 +226,11 @@ io.on('connection', function(socket){
           var is_valid = isMoveValid(data.from, data.to, sgc.validMoves);
           if (is_valid) {
             console.log('move is valid');
+            var move_hash = data.from + " " + data.to;
+            if (!move_record[move_hash]) {
+              move_record[move_hash] = 0;
+            }
+            move_record[move_hash]++;
             // TODO: record move here
           } else {
             console.log('move is not valid');
@@ -347,10 +354,48 @@ function startDaemon() {
       intern2.on('message', (m) => {
         if (m['a'] === 'b') {
           console.log("Phase 2 message");
-          count++;
-          if (count >= 4) {
-            intern2.send({a: 'c'});
+          var move_string = ""
+          var max_val = 0;
+          for (key in move_record) {
+            if (move_record[key] > max_val) {
+              max_val = move_record[key];
+              move_string = key;
+            }
           }
+          red_to_move = !red_to_move;
+          move_record = {};
+
+          if (move_string) {
+            // publish the move
+            console.log("Move made: " + move_string);
+            var move_from = move_string.substring(0, move_string.indexOf(" "));
+            var move_to = move_string.substring(move_string.indexOf(" ") + 1);
+            for (sid in sid_to_sockets) {
+              // console.log(sid_to_sockets[sid]);
+              var tmp = sid_to_sockets[sid];
+              // console.log(tmp[0]);
+              for (var i = 0; i < tmp.length; i++) {
+              // for (var sockey in tmp) {
+                var sockey = tmp[i];
+                console.log(sockey);
+                console.log(sockey.id);
+                if (typeof sockey.id != 'undefined') {
+                  console.log(sockey.id);
+                  sockey.emit('server-to-client move', {
+                    from: move_from,
+                    to: move_to,
+                    promotion: 'q'
+                  });
+                } // this needs to be cleaned up later
+              }
+            }
+          }
+          // if (!move_string || (someone lost))
+
+          // count++;
+          // if (count >= 4) {
+          //   intern2.send({a: 'c'});
+          // }
         }
       });
     }
