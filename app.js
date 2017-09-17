@@ -29,7 +29,7 @@ app.use(session({
 var redis = require('redis');
 // var redisStore = require('connect-redis')(session);
 
-var client = redis.createClient(6379,'hive-mind.redis.cache.windows.net', {auth_pass: config['redis-key'], tls: {servername: 'hive-mind.redis.cache.windows.net'}});
+var client = redis.createClient(6379,'localhost', {auth_pass: config['redis-key'], tls: {servername: 'hive-mind.redis.cache.windows.net'}});
 
 app.use(cookieParser());
 
