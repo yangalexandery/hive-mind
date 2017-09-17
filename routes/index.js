@@ -16,7 +16,6 @@ router.get('/game', function(req, res,next) {
   if(teamName==undefined or teamName == "random"){
   	teamName == "red"
   }
-  console.log(teamName)
   var data = {
   	'teamName': teamName,
   }
