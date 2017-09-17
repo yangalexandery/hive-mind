@@ -30,8 +30,8 @@ var redis = require('redis');
 var RedLock = require('redlock');
 // var redisStore = require('connect-redis')(session);
 
-var client = redis.createClient(config['redis-port'], config['redis-uri'], {auth_pass: config['redis-key'], tls: {servername: 'hive-mind.redis.cache.windows.net'}});
-var redlock = new RedLock(
+var client = redis.createClient(config['redis-port'], config['redis-uri'], {auth_pass: config['redis-key'], tls: config['redis-tls']});
+/* var redlock = new RedLock(
   [client],
   {
     retryCount: 10,
@@ -41,6 +41,7 @@ var redlock = new RedLock(
 var REDLOCK_RESOURCES = {
   CREATE_ROOM: "create-room-resource"
 }
+*/
 
 app.use(cookieParser());
 
@@ -61,6 +62,14 @@ function normalizePort(val) {
 
   return false;
 }
+
+/*********************
+ * BEGIN SOCKET CODE *
+ *********************/
+
+var sid_to_sockets = {}; // session ID to array of all sockets
+var sid_to_sub_sockets = {}; // session ID to array of subscription-sockets
+var socket_to_sid = {}; // sockets to session ID
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
@@ -98,6 +107,7 @@ io.set('authorization', function(data, accept) {
         accept('Error retrieving session', false);
       } else {
         data.session = session;
+        console.log("User authorization accepted.");
         accept(null, true);
       }
     });
@@ -108,14 +118,84 @@ io.set('authorization', function(data, accept) {
 });
 
 io.on('connection', function(socket){
-  ROOM_KEY = "current-loading-room";
+  var ROOM_KEY = "current-loading-room";
   // access session data
   console.log('a user connected');
+
+  if (socket.handshake.headers.cookie) {
+    var cookie_data = cookie.parse(socket.handshake.headers.cookie);
+    var sessionID = cookie_data['connect.sid'].substring(2).split('.')[0];
+    console.log("Socket connection sessionID: " + sessionID);
+    sessionStore.get(sessionID, function(err, session) {
+      if (err || !session) {
+        console.log('Error retrieving session');
+        if (err) {
+          console.log(err);
+        } else {
+          console.log('Session not found.');
+        }
+      } else {
+        // main sockets in this block of logic
+        socket_to_sid[socket.id] = sessionID;
+        console.log("BLAAAH " + socket_to_sid[socket.id]);
+        if (!sid_to_sockets[sessionID]) {
+          sid_to_sockets[sessionID] = [];
+        }
+        sid_to_sockets[sessionID].push(socket);
+        console.log('Socket registered: ' + socket.id);
+
+        socket.on('move', function (moveData) {
+          console.log('Move sent: ' + JSON.stringify(moveData));
+        });
+
+        socket.on('register subscribe-socket', function (data) {
+          data.sessionID = socket_to_sid[socket.id];
+          if (data.sessionID) {
+            console.log('subscribe socket registered from: ' + data.sessionID);
+
+            if (!sid_to_sub_sockets[data.sessionID]) {
+              sid_to_sub_sockets[data.sessionID] = [];
+            }
+            sid_to_sub_sockets[data.sessionID].push(socket);
+          } else {
+            console.log("oh man oh geez this really shouldn't happen. tell alex: no socket.id found for subscribe-socket");
+          }
+        });
+
+        socket.on('disconnect', function(data) {
+          console.log('a user disconnected');
+
+          var sid_data = socket_to_sid[socket.id];
+          if (sid_data) {
+            var s_index = sid_to_sub_sockets[sid_data] ? sid_to_sub_sockets[sid_data].indexOf(socket) : -1;
+            if (s_index > -1) {
+              sid_to_sub_sockets[sid_data].splice(s_index, 1);
+              console.log('subscription socket removed');
+            }
+
+            s_index = sid_to_sockets[sid_data] ? sid_to_sockets[sid_data].indexOf(socket) : -1;
+            if (s_index > -1) {
+              sid_to_sockets[sid_data].splice(s_index, 1);
+              console.log('general socket removed');
+            }
+            delete socket_to_sid[socket.id];
+          } else {
+            console.log("oh man oh geez this really shouldn't happen. tell alex: no socket.id found for disconnect.");
+          }
+        });
+      }
+    });
+  } else {
+    console.log('No cookie transmitted');
+  }
+  // add the sockets to global data structures
+
   // check if a room already exists
   client.EXISTS(ROOM_KEY, function (err, result) {
-    console.log("Entered callback");
-    if (err !== undefined) {
+    console.log("result: " + result);
+    if (err) {
       console.log("Everything went to shit");
+      console.log(err);
       return;
     }
     if (result) {
@@ -123,12 +203,6 @@ io.on('connection', function(socket){
     } else {
       console.log('Room does not exist yet - attempt to acquire lock and create room');
     }
-  });
-  socket.on('disconnect', function () {
-    console.log('a user disconnected');
-  });
-  socket.on('move', function (moveData) {
-    console.log('Move sent: ' + JSON.stringify(moveData));
   });
 });
 
