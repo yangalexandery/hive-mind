@@ -20,7 +20,7 @@ var config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 
 var redis = require('redis');
 
-var client = redis.createClient(6380,'hive-mind.redis.cache.windows.net', {auth_pass: config['redis-key'], tls: {servername: 'hive-mind.redis.cache.windows.net'}});
+var client = redis.createClient(6379,'hive-mind.redis.cache.windows.net', {auth_pass: config['redis-key'], tls: {servername: 'hive-mind.redis.cache.windows.net'}});
 
 app.use(cookieParser());
 app.use(session({ store: sessionStore, secret: 'JAAAAASH' }));
