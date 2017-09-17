@@ -40,3 +40,10 @@ body {
     height: 100%;
     background-color: blue;
 }
+
+#teamname {
+	position:relative;
+	overflow:hidden;
+	text-align:center;
+	margin:10px;
+}
