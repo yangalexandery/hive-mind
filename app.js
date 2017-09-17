@@ -186,7 +186,7 @@ io.on('connection', function(socket){
         // socket.on('client-to-server move', function (data) {
         //   sid_data = socket_to_sid[socket_id];
         //   // receives coordinates of piece's source and destination.
-          
+
         // });
 
 
@@ -286,6 +286,11 @@ function daemonPhaseTwo() {
   // reset redis poll data
   // publish to room subscribers
 }
+
+
+var ChildProcess = require('child_process');
+var child = ChildProcess.fork('./test.js', ['test']);
+console.log("past the thing");
 
 module.exports = app;
 
