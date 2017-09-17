@@ -151,4 +151,5 @@ $.getScript('chessboardjs-0.3.0/js/chessboard-0.3.0.js', function() {
     onSnapEnd: onSnapEnd
   };
   board = ChessBoard('board', cfg);
+  window['TheChessBoard'] = board;
 });
