@@ -47,3 +47,23 @@ body {
 	text-align:center;
 	margin:10px;
 }
+
+
+.connected {
+    background: white !important;
+}
+
+#lines {
+    width: 400px;
+    height: 300px;
+    border: inset;
+    overflow: auto;
+    background: silver;
+}
+#lines p {
+    margin: 1px;
+}
+#input {
+    width: 400px;
+    background: silver;
+}
