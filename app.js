@@ -14,6 +14,14 @@ var cookie = require('cookie');
 var MemoryStore = session.MemoryStore;
 var sessionStore = new MemoryStore();
 
+
+var fs = require('fs');
+var config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
+
+var redis = require('redis');
+
+var client = redis.createClient(6380,'hive-mind.redis.cache.windows.net', {auth_pass: config['redis-key'], tls: {servername: 'hive-mind.redis.cache.windows.net'}});
+
 app.use(cookieParser());
 app.use(session({ store: sessionStore, secret: 'JAAAAASH' }));
 
