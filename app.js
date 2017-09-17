@@ -12,7 +12,7 @@ var cookieParser = require('cookie-parser');
 var cookie = require('cookie');
 
 
-var sleep = require('sleep');
+var sleep = require('system-sleep');
 var chess = require('chess');
 
 
@@ -134,6 +134,39 @@ io.set('authorization', function(data, accept) {
   }
 });
 
+var game = chess.create();
+var sgc = chess.createSimple();
+
+var isMoveValid = function (src, dest, validMoves) {
+  'use strict';
+
+  var i = 0,
+    isFound = function (expr, sq) {
+      return ((typeof expr === 'string' && sq.file + sq.rank === expr) ||
+        (expr.rank && expr.file &&
+          sq.file === expr.file && sq.rank === expr.rank));
+    },
+    squares = [];
+
+  for (i = 0; i < validMoves.length; i++) {
+    if (isFound(src, validMoves[i].src)) {
+      squares = validMoves[i].squares;
+    }
+  }
+
+  if (squares && squares.length > 0) {
+    for (i = 0; i < squares.length; i++) {
+      if (isFound(dest, squares[i])) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
+// var sgc = require('simpleGameClient');
+// var gc = chess.simpleGameClient.create();
+
 io.on('connection', function(socket){
   var ROOM_KEY = "current-loading-room";
   var sessionID;
@@ -183,11 +216,21 @@ io.on('connection', function(socket){
         });
 
 
-        // socket.on('client-to-server move', function (data) {
-        //   sid_data = socket_to_sid[socket_id];
-        //   // receives coordinates of piece's source and destination.
-          
-        // });
+        socket.on('client-to-server move', function (data) {
+          sid_data = socket_to_sid[socket.id];
+          console.log(data.from + " " + data.to);
+          var validMoves = sgc.getStatus().validMoves;
+
+          var is_valid = isMoveValid(data.from, data.to, sgc.validMoves);
+          if (is_valid) {
+            console.log('move is valid');
+            // TODO: record move here
+          } else {
+            console.log('move is not valid');
+          }
+          // tmp_move = game.move(data.source, data.dest, false);
+          // receives coordinates of piece's source and destination.
+        });
 
 
         socket.on('disconnect', function(data) {
@@ -242,6 +285,7 @@ function joinOrCreateRoom(roomKey, uid) {
           console.log("Acquired lock - creating new room");
           joinRoom(roomKey, uid);
           // TODO: fork the managing daemon
+          startDaemon();
           return lock.unlock()
           .catch(function (err) {
             console.log("Died while unlocking - this is fine");
@@ -266,26 +310,54 @@ function joinRoom(roomKey, uid) {
   });
 }
 
-var game = chess.create();
 var countdown_init_ts = Math.floor(Date.now());
 
 function daemonPhaseOne() {
   // this is a child process
   game = chess.create();
   countdown_init_ts = Math.floor(Date.now());
-  sleep.sleep(phaseOneDelay);
+  // sleep.sleep(phaseOneDelay);
   // tell all room subscribers to move to phase two
   daemonPhaseTwo();
 }
 
 function daemonPhaseTwo() {
-  sleep.sleep(phaseTwoDelay);
+  // sleep.sleep(phaseTwoDelay);
   // pull from redis
   // process redis data
   // update board state
   // reset redis poll data
   // publish to room subscribers
 }
+
+var ChildProcess = require('child_process');
+var count = 0;
+
+function startDaemon() {
+  game = chess.create();
+  countdown_init_ts = Math.floor(Date.now());
+  var intern1 = ChildProcess.fork('./intern.js', ['phase-one']);
+  intern1.on('message', (m) => {
+    // intern1.send({a: 'd'});
+    console.log(m);
+    if (m['a'] === 'a') {
+      console.log("Phase 1 message");
+      // tell all room subscribers to move to phase two
+      var intern2 = ChildProcess.fork('./intern.js', ['phase-two']);
+      intern2.on('message', (m) => {
+        if (m['a'] === 'b') {
+          console.log("Phase 2 message");
+          count++;
+          if (count >= 4) {
+            intern2.send({a: 'c'});
+          }
+        }
+      });
+    }
+  });
+}
+
+console.log("past the thing");
 
 module.exports = app;
 

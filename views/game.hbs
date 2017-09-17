@@ -4,7 +4,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">        <!-- < script src="js/chess.js"></script> -->
         <link rel="stylesheet" href="stylesheets/game.css" />
         <script src="/socket.io/socket.io.js"></script>
-        <script src="js/moveprotocol.js"></script>
+        <!-- <script src="js/moveprotocol.js"></script> -->
         <script src="chessboardjs-0.3.0/js/chessboard-0.3.0.js"></script>
         <link rel="stylesheet" href="chessboardjs-0.3.0/css/chessboard-0.3.0.css">
         <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
@@ -42,6 +42,12 @@
                     <div id="board" style="margin: auto"></div>
                 </div>
                 <div class="right-content col-4" style="border:2px">
+                    <div class="row" style="width:100%">
+                        <script src ="js/game.js"></script>
+                        <div id="teamname" class="row ">Your team is {{teamName}}, {{currTeam}}'s turn</div>
+                        <script type="text/javascript">set_team("{{teamName}}");</script>
+                        <div id="timer" class='row"'></div> <!--https://www.w3schools.com/howto/howto_js_countdown.asp-->
+                    </div>
                     <div class="tab" style="margin-bottom:15px">
                         <button class="tablinks" onclick="switchTab('poll')">Poll</button>
                         <button class="tablinks" onclick="switchTab('history')">History</button>
@@ -87,9 +93,6 @@
                               </footer>
                             </div>
 
-                            
-
-
                             <script>
                                 $(document).ready(function(){
                                     $('.messageForm').keydown(function(e){
@@ -106,7 +109,6 @@
                         </div>
 
                     </div>
-                    <div id="teamname" class="row ">Your team is {{teamName}}, {{currTeam}}'s turn</div>
                     <button type="button" id="leaveGame" class="btn" onclick="location.href = '/';" style = "margin-top:20px" >Leave Game</button>
                 </div>
             </div>
