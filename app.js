@@ -162,23 +162,33 @@ io.on('connection', function(socket){
         sid_to_sockets[sessionID].push(socket);
         console.log('Socket registered: ' + socket.id);
 
+
         socket.on('move', function (moveData) {
           console.log('Move sent: ' + JSON.stringify(moveData));
         });
 
-        socket.on('register subscribe-socket', function (data) {
-          data.sessionID = socket_to_sid[socket.id];
-          if (data.sessionID) {
-            console.log('subscribe socket registered from: ' + data.sessionID);
 
-            if (!sid_to_sub_sockets[data.sessionID]) {
-              sid_to_sub_sockets[data.sessionID] = [];
+        socket.on('register subscribe-socket', function (data) {
+          sid_data = socket_to_sid[socket.id];
+          if (sid_data) {
+            console.log('subscribe socket registered from: ' + sid_data);
+
+            if (!sid_to_sub_sockets[sid_data]) {
+              sid_to_sub_sockets[sid_data] = [];
             }
-            sid_to_sub_sockets[data.sessionID].push(socket);
+            sid_to_sub_sockets[sid_data].push(socket);
           } else {
             console.log("oh man oh geez this really shouldn't happen. tell alex: no socket.id found for subscribe-socket");
           }
         });
+
+
+        // socket.on('client-to-server move', function (data) {
+        //   sid_data = socket_to_sid[socket_id];
+        //   // receives coordinates of piece's source and destination.
+          
+        // });
+
 
         socket.on('disconnect', function(data) {
           console.log('a user disconnected');
