@@ -11,29 +11,27 @@ var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var cookie = require('cookie');
 
-var MemoryStore = session.MemoryStore;
-var sessionStore = new MemoryStore();
-
 
 var fs = require('fs');
 var config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 
+var MemoryStore = require('memorystore')(session);
+var sessionStore = new MemoryStore({checkPeriod: 3600000});
+
+app.use(session({
+  store: sessionStore,
+  secret: config['session-secret'],
+  key: 'connect.sid',
+  saveUninitialized: true,
+  resave: false
+}));
+
 var redis = require('redis');
 var redisStore = require('connect-redis')(session);
 
-var client = redis.createClient();
+var client = redis.createClient(6379,'hive-mind.redis.cache.windows.net', {auth_pass: config['redis-key'], tls: {servername: 'hive-mind.redis.cache.windows.net'}});
 
 app.use(cookieParser());
-app.use(session({
-    secret: 'mysecret',
-    store: new redisStore({client: client, ttl: 260}),
-    saveUninitialized: false,
-    resave: false,
-    cookie: {secure: true}
-}));
-// var client = redis.createClient(6379,'hive-mind.redis.cache.windows.net', {auth_pass: config['redis-key'], tls: {servername: 'hive-mind.redis.cache.windows.net'}});
-
-// app.use(session({ store: sessionStore, secret: 'JAAAAASH' }));
 
 server.listen(normalizePort(process.env.PORT || '3000'));
 
@@ -81,9 +79,11 @@ app.use(function(err, req, res, next) {
 io.set('authorization', function(data, accept) {
   if (data.headers.cookie) {
     data.cookie = cookie.parse(data.headers.cookie);
-    data.sessionID = data.cookie['express.sid'];
+    data.sessionID = data.cookie['connect.sid'].substring(2).split('.')[0];
+    console.log('Session cookie: ' + data.sessionID);
     sessionStore.get(data.sessionID, function (err, session) {
       if (err || !session) {
+        console.log('Error retrieving session');
         accept('Error retrieving session', false);
       } else {
         data.session = session;
@@ -91,6 +91,7 @@ io.set('authorization', function(data, accept) {
       }
     });
   } else {
+    console.log('No cookies');
     return accept('No cookie transmitted', false);
   }
 });

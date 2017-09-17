@@ -42,8 +42,6 @@ body {
 }
 
 #teamname {
-	position:relative;
-	overflow:hidden;
 	text-align:center;
 	margin:10px;
 }
@@ -66,4 +64,6 @@ body {
 #input {
     width: 400px;
     background: silver;
+	margin-left:2%;
+	margin-bottom:2%;
 }
