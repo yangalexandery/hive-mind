@@ -1,5 +1,8 @@
 function toGame(color){
 	console.log(color)
+	if(color=="random"){
+		color = "red"
+	}
 	// var data = {}
 	// data.color= color
 	$.ajax({
