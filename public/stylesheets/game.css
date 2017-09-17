@@ -56,14 +56,14 @@ body {
     height: 300px;
     border: inset;
     overflow: auto;
-    background: silver;
+    background: white;
 }
 #lines p {
     margin: 1px;
 }
 #input {
     width: 400px;
-    background: silver;
+    background: white;
 	margin-left:2%;
 	margin-bottom:2%;
 }
