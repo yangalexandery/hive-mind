@@ -1,11 +1,11 @@
-html {
+/*html {
     height: 100%;
-}
+}*/
 
 body {
     margin: 0px;
     height: 100vh;
-    overflow: hidden;
+    /*overflow-y: scroll;*/
 }
 
 .major-container {
@@ -16,7 +16,7 @@ body {
     bottom: 0;
     width: 100%;
     height: 100%;
-    overflow: hidden;
+/*    overflow: hidden;*/
 }
 
 .content {
@@ -34,6 +34,7 @@ body {
 
 .left-content {
     height: 100%;
+    overflow-y: scroll;
 }
 
 .right-content {
@@ -51,7 +52,7 @@ body {
     background: white !important;
 }
 
-#lines {
+/*#lines {
     overflow: auto;
     border: inset;
     background: white;
@@ -59,14 +60,14 @@ body {
     height: "40%";
 }
 #lines p {
-    margin: 1px;
-}
+    margin: 1px;*/
+/*}
 #input {
-    width: 400px;
-    background: white;
+  width: 400px;
+  background: white;
 	margin-left:2%;
 	margin-bottom:2%;
-}
+}*/
 
 .members-count,
 .members-list,
